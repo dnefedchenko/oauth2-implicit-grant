@@ -1,0 +1,14 @@
+logging:
+  level:
+    org.springframework.security.web: DEBUG
+#spring:
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: 992366419202-51p4serphkidetrugvhr6gh6vjuq2rj0.apps.googleusercontent.com
+#            client-secret: v3IRDnKS5uawuPMK8pv2p-NI
+#            authorization-grant-type: implicit
+#            redirect-uri-template: http://localhost:4200
+#            scope: email
