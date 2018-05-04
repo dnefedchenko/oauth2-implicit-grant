@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
@@ -34,9 +35,11 @@ public class ImplicitGrantAuthenticationFilter extends AbstractAuthenticationPro
 
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
         validateRequest(httpServletRequest);
-        logger.info("Attempting to authentication google user with access token - {}",
-                httpServletRequest.getParameter(googleAccessTokenParameter));
-        return this.authenticationManager.authenticate(new ImplicitGrantAuthentication(Arrays.asList()));
+        String googleAccessToken = httpServletRequest.getParameter(googleAccessTokenParameter);
+        logger.info("Attempting to authentication google user with access token - {}", googleAccessToken);
+        Authentication authentication = new ImplicitGrantAuthentication(
+                Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")), googleAccessToken);
+        return this.authenticationManager.authenticate(authentication);
     }
 
     private void validateRequest(HttpServletRequest request) {

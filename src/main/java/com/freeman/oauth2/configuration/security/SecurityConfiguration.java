@@ -4,6 +4,7 @@ import com.freeman.oauth2.configuration.security.filters.ImplicitGrantAuthentica
 import com.freeman.oauth2.configuration.security.providers.ImplicitGrantAuthenticationProvider;
 import com.freeman.oauth2.configuration.security.service.FormBasedAuthenticationFailureHandler;
 import com.freeman.oauth2.configuration.security.service.FormBasedAuthenticationSuccessHandler;
+import com.freeman.oauth2.configuration.security.service.RestfulAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -40,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.POST, implicitGrantAuthenticationUrl).permitAll()
                     .anyRequest().authenticated()
                 .and()
-                    .exceptionHandling()
+                    .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
                 .and()
                     .cors()
                 .and()
@@ -91,5 +93,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(11);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new RestfulAuthenticationEntryPoint();
     }
 }
