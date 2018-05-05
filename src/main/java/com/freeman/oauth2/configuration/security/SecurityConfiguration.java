@@ -4,6 +4,7 @@ import com.freeman.oauth2.configuration.security.filters.ImplicitGrantAuthentica
 import com.freeman.oauth2.configuration.security.providers.ImplicitGrantAuthenticationProvider;
 import com.freeman.oauth2.configuration.security.service.FormBasedAuthenticationFailureHandler;
 import com.freeman.oauth2.configuration.security.service.FormBasedAuthenticationSuccessHandler;
+import com.freeman.oauth2.configuration.security.service.JwtService;
 import com.freeman.oauth2.configuration.security.service.RestfulAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private UserDetailsService userDetailsService;
+    @Autowired private JwtService jwtService;
     @Autowired private ImplicitGrantAuthenticationProvider implicitGrantAuthenticationProvider;
 
     @Override
@@ -57,7 +59,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private Filter buildOAuth2ImplicitGrantFilter(String processingUrl) {
-        return new ImplicitGrantAuthenticationFilter(new AntPathRequestMatcher(processingUrl, "POST"), this.authenticationManager);
+        return new ImplicitGrantAuthenticationFilter(new AntPathRequestMatcher(processingUrl,
+                "POST"), this.authenticationManager, this.jwtService);
     }
 
     @Override

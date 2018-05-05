@@ -1,6 +1,9 @@
 logging:
   level:
     org.springframework.security.web: DEBUG
+jwt:
+  private:
+    key: $2a$11$sR9z9Q66zWqXMTtEA2EeUOiPlen24ChrNmwDkYCVHYbJ7FR9Oy6D6
 #spring:
 #  security:
 #    oauth2:
