@@ -1,6 +1,7 @@
 package com.freeman.oauth2.configuration.security;
 
 import com.freeman.oauth2.configuration.security.filters.ImplicitGrantAuthenticationFilter;
+import com.freeman.oauth2.configuration.security.filters.JwtAuthenticationFilter;
 import com.freeman.oauth2.configuration.security.providers.ImplicitGrantAuthenticationProvider;
 import com.freeman.oauth2.configuration.security.service.FormBasedAuthenticationFailureHandler;
 import com.freeman.oauth2.configuration.security.service.FormBasedAuthenticationSuccessHandler;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private String implicitGrantAuthenticationUrl = "/auth/token";
     private String formBasedAuthenticationUrl = "/auth/login";
+    private String jwtProcessingUrl = "/**";
 
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private UserDetailsService userDetailsService;
@@ -55,12 +57,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                     .addFilterAfter(buildOAuth2ImplicitGrantFilter(implicitGrantAuthenticationUrl), LogoutFilter.class)
+                    .addFilterAfter(buildJwtFilter(jwtProcessingUrl), ImplicitGrantAuthenticationFilter.class)
                 .csrf().disable();
     }
 
     private Filter buildOAuth2ImplicitGrantFilter(String processingUrl) {
         return new ImplicitGrantAuthenticationFilter(new AntPathRequestMatcher(processingUrl,
                 "POST"), this.authenticationManager, this.jwtService);
+    }
+
+    private Filter buildJwtFilter(String jwtProcessingUrl) {
+        return new JwtAuthenticationFilter(jwtProcessingUrl);
     }
 
     @Override
