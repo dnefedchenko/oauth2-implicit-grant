@@ -3,7 +3,6 @@ package com.freeman.oauth2.configuration.security.filters;
 import com.freeman.oauth2.configuration.security.GoogleUser;
 import com.freeman.oauth2.configuration.security.providers.ImplicitGrantAuthentication;
 import com.freeman.oauth2.configuration.security.service.JwtService;
-import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -26,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ImplicitGrantAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private static Logger logger = LoggerFactory.getLogger(ImplicitGrantAuthenticationFilter.class);
@@ -65,10 +65,9 @@ public class ImplicitGrantAuthenticationFilter extends AbstractAuthenticationPro
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authResult);
         response.setHeader("X-Token", generateToken(authResult));
         response.setStatus(HttpStatus.OK.value());
+        return;
     }
 
     private String generateToken(Authentication authResult) {
@@ -80,6 +79,7 @@ public class ImplicitGrantAuthenticationFilter extends AbstractAuthenticationPro
             claims.put("given_name", googleUser.getGiven_name());
             claims.put("family_name", googleUser.getFamily_name());
             claims.put("gender", googleUser.getGender());
+            claims.put("authorities", authResult.getAuthorities().stream().collect(Collectors.toSet()));
             token = jwtService.generateJwtToken(googleUser.getEmail(), claims);
         }
         return token;
