@@ -67,7 +67,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private Filter buildJwtFilter(String jwtProcessingUrl) {
-        return new JwtAuthenticationFilter(jwtProcessingUrl);
+        return new JwtAuthenticationFilter(jwtProcessingUrl, jwtService);
     }
 
     @Override

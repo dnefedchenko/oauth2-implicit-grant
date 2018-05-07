@@ -30,14 +30,7 @@ public class JwtService {
                 .compact();
     }
 
-    public Jws<Claims> parseToken(String compactJws) {
-        Jws<Claims> claims;
-        try {
-            claims = Jwts.parser().setSigningKey(privateKey).parseClaimsJws(compactJws);
-        } catch (SignatureException e) {
-            logger.error("Token signature validation failed {}", e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        }
-        return claims;
+    public Jws<Claims> parseToken(String compactJws) throws SignatureException {
+        return Jwts.parser().setSigningKey(privateKey).parseClaimsJws(compactJws);
     }
 }

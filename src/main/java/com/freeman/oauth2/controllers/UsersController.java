@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/v1/users")
+@RequestMapping("/users")
 public class UsersController {
     private UserAuthenticationService userAuthenticationService;
 

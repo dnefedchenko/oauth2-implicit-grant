@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -79,7 +80,9 @@ public class ImplicitGrantAuthenticationFilter extends AbstractAuthenticationPro
             claims.put("given_name", googleUser.getGiven_name());
             claims.put("family_name", googleUser.getFamily_name());
             claims.put("gender", googleUser.getGender());
-            claims.put("authorities", authResult.getAuthorities().stream().collect(Collectors.toSet()));
+            claims.put("authorities", authResult.getAuthorities().stream()
+                .map(entry -> (entry.getAuthority()))
+                .collect(Collectors.joining(",")));
             token = jwtService.generateJwtToken(googleUser.getEmail(), claims);
         }
         return token;

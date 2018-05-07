@@ -2,6 +2,7 @@ package com.freeman.oauth2.configuration.security.service;
 
 import com.freeman.oauth2.configuration.security.GoogleUser;
 import com.freeman.oauth2.configuration.security.providers.ImplicitGrantAuthentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,10 +30,10 @@ public class UserAuthenticationService implements UserDetailsService {
         Map<String, String> userDetails = new HashMap<>();
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
-        if (authentication instanceof ImplicitGrantAuthentication) {
-            ImplicitGrantAuthentication implicitGrantAuthentication = (ImplicitGrantAuthentication)authentication;
-            GoogleUser googleUser = (GoogleUser) implicitGrantAuthentication.getPrincipal();
-            userDetails.put("email", googleUser.getEmail());
+        if (authentication instanceof UsernamePasswordAuthenticationToken) {
+            UsernamePasswordAuthenticationToken usernamePasswordAuthentication = (UsernamePasswordAuthenticationToken)authentication;
+            String username = usernamePasswordAuthentication.getPrincipal().toString();
+            userDetails.put("email", username);
         }
         return userDetails;
     }
