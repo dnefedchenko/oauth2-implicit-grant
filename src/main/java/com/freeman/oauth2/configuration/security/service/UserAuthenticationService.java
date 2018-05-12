@@ -1,7 +1,5 @@
 package com.freeman.oauth2.configuration.security.service;
 
-import com.freeman.oauth2.configuration.security.GoogleUser;
-import com.freeman.oauth2.configuration.security.providers.ImplicitGrantAuthentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;

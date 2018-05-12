@@ -25,7 +25,7 @@ public class JwtService {
     public String generateJwtToken(String subject, Map<String, Object> claims) {
         return Jwts.builder()
                 .setSubject(subject)
-                .setClaims(claims)
+                .addClaims(claims)
                 .signWith(SignatureAlgorithm.HS512, privateKey)
                 .compact();
     }
