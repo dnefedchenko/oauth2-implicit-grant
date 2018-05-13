@@ -1,11 +1,9 @@
 package com.freeman.oauth2;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@ComponentScan(basePackages = {"com.freeman.oauth2"})
-@EnableAutoConfiguration
+@SpringBootApplication
 public class ImplicitGrantFlowApplication {
     public static void main(String[] args) {
         SpringApplication.run(ImplicitGrantFlowApplication.class, args);
