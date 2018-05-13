@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -52,12 +53,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                     .loginProcessingUrl(formBasedAuthenticationUrl)
-                    .successHandler(new FormBasedAuthenticationSuccessHandler())
+                    .successHandler(new FormBasedAuthenticationSuccessHandler(jwtService))
                     .failureHandler(new FormBasedAuthenticationFailureHandler())
                 .permitAll()
                 .and()
                     .addFilterAfter(buildOAuth2ImplicitGrantFilter(implicitGrantAuthenticationUrl), LogoutFilter.class)
-                    .addFilterAfter(buildJwtFilter(jwtProcessingUrl), ImplicitGrantAuthenticationFilter.class)
+                    .addFilterAfter(buildJwtFilter(jwtProcessingUrl), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();
     }
 
